@@ -1,54 +1,57 @@
-import {auth} from "../firebase";
+import { auth } from "../firebase/firebase";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { useState } from "react";
-import { useNavigate} from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
-const Login = ()=>{
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const navigate = useNavigate();
+const Login = () => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const navigate = useNavigate();
 
-   const handleLogin = async(e)=>{
+  const handleLogin = async (e) => {
     e.preventDefault();
-    try{
-        await signInWithEmailAndPassword(auth, email, password);
-        navigate("/");
-    }catch(error){
-        alert(error.message);
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+      navigate("/");
+    } catch (error) {
+      alert(error.message);
     }
-   };
+  };
 
-   return(
-    <form 
-    onSubmit={handleLogin}
-    className="p-6 bg-[#F0F7F4] text-[#042A2B] min-h-screen flex flex-col items-center justify-center"
->
-<h1 className="text-2xl font-bold text-[#F06543] mb-4">Login</h1>
-      <input
-        type="email"
-        placeholder="Email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        className="w-80 p-2 border border-[#B3BFB8] bg-[#A2E3C4] rounded mb-2 outline-none"
-        required
-      />
-      <input
-        type="password"
-        placeholder="Password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        className="w-80 p-2 border border-[#B3BFB8] bg-[#A2E3C4] rounded mb-4 outline-none"
-        required
-      />
-      <button
-        type="submit"
-        className="w-80 p-2 bg-[#F06543] text-white rounded hover:bg-[#d95639] transition"
-      >
-        Login
-      </button>
+  return (
+    <div className="h-screen w-full flex items-center justify-center overflow-hidden">
+      <div className="w-full max-w-sm p-6 bg-white rounded-lg shadow-lg">
+        <h1 className="text-xl font-bold text-[#6B0F1A] mb-4 text-center">Login</h1>
 
-    </form>
-   )
-}
+        <form onSubmit={handleLogin} className="flex flex-col">
+          <input
+            type="email"
+            placeholder="Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            className="w-full p-2 border border-[#595959] rounded mb-2 outline-none text-[#6B0F1A]"
+            required
+          />
+
+          <input
+            type="password"
+            placeholder="Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            className="w-full p-2 border border-[#595959] rounded mb-4 outline-none text-[#6B0F1A]"
+            required
+          />
+
+          <button
+            type="submit"
+            className="w-full p-2 bg-[#6B0F1A] text-white rounded hover:bg-[#500b13] transition"
+          >
+            Login
+          </button>
+        </form>
+      </div>
+    </div>
+  );
+};
 
 export default Login;

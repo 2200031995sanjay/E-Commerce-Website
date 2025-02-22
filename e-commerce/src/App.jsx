@@ -9,29 +9,26 @@ import Signup from "./pages/Signup";
 import AdminDashboard from "./pages/AdminDashboard";
 
 function App() {
-   
-  const {user , isAdmin} = useAuth();
+  const { user, isAdmin } = useAuth() || {}; // Avoid destructuring undefined
 
   return (
-    <div  className="bg-[#F0F7F4] text-[#042A2B] min-h-screen" >
+    <div className="bg-[#F0F7F4] text-[#042A2B] min-h-screen">
       <Router>
         <CartProvider>
           <Navbar />
-          <div className="container mx-auto p-6">
+          <div > {/* Reduced padding */}
             <Routes>
-              <Route path="/" element={<Home/>}/>
-              <Route path="/cart" element={user?<Cart />:<Navigate to="/login" />}/>
-              <Route path="/login" element={<Login />}/>
-              <Route path="signup" element={<Signup/>}/>
-              <Route path="/admin" element={isAdmin?<AdminDashboard/>:<Navigate to="/"/>}/>
+              <Route path="/" element={<Home />} />
+              <Route path="/cart" element={user ? <Cart /> : <Navigate to="/login" />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/signup" element={<Signup />} />
+              <Route path="/admin" element={isAdmin ? <AdminDashboard /> : <Navigate to="/" />} />
             </Routes>
-
           </div>
         </CartProvider>
       </Router>
-
     </div>
-  )
+  );
 }
 
-export default App
+export default App;

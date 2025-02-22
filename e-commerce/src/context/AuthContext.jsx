@@ -1,32 +1,36 @@
-import { createContext, useContext, useState, useEffect} from "react";
-
-import {auth} from "../firebase";
-import {onAuthStateChanged, signOut} from "firebase/auth";
+import { createContext, useContext, useState, useEffect } from "react";
+import { auth } from "../firebase/firebase";
+import { onAuthStateChanged, signOut } from "firebase/auth";
 
 const AuthContext = createContext();
 
-
 // eslint-disable-next-line react/prop-types
-export const AuthProvider =({ Children })=>{
-    const [ user , setUser] = useState(null);
-    const [isAdmin, setIsAdmin] = useState(false);
+export const AuthProvider = ({ children }) => {  // Fixed prop name
+  const [user, setUser] = useState(null);
+  const [isAdmin, setIsAdmin] = useState(false);
 
-    useEffect(()=>{
-        onAuthStateChanged(auth, (user)=>{
-            setUser(user);
-            setIsAdmin(user?.email === "admin@gmail.com");
-        })
-    })
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser);
+      setIsAdmin(currentUser?.email === "admin@gmail.com");
+    });
 
-    const logout = async()=>{
-        await signOut(auth);
+    return () => unsubscribe();  // Cleanup function to avoid memory leaks
+  }, []);
+
+  const logout = async () => {
+    try {
+      await signOut(auth);
+    } catch (error) {
+      console.error("Logout error:", error);
     }
+  };
 
-    return(
-        <AuthContext.Provider value={{user, isAdmin,logout}}>
-        {Children}
-</AuthContext.Provider>
-    );
-}
+  return (
+    <AuthContext.Provider value={{ user, isAdmin, logout }}>
+      {children}  {/* Fixed incorrect prop name */}
+    </AuthContext.Provider>
+  );
+};
 
 export const useAuth = () => useContext(AuthContext);
