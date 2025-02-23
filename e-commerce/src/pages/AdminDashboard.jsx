@@ -57,7 +57,7 @@ export default function AdminDashboard() {
                 >
                   <div>
                     <h3 className="text-lg font-medium text-[#6B0F1A]">{product.name}</h3>
-                    <p className="text-gray-600">${product.price}</p>
+                    <p className="text-gray-600">{product.price}Rs</p>
                   </div>
                 </div>
               ))}
