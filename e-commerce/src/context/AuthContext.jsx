@@ -5,17 +5,19 @@ import { onAuthStateChanged, signOut } from "firebase/auth";
 const AuthContext = createContext();
 
 // eslint-disable-next-line react/prop-types
-export const AuthProvider = ({ children }) => {  // Fixed prop name
+export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [loading, setLoading] = useState(true); // Added loading state
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       setUser(currentUser);
-      setIsAdmin(currentUser?.email === "admin@gmail.com");
+      setIsAdmin(currentUser?.email === "admin@gmail.com"); 
+      setLoading(false); // Set loading to false once auth state is resolved
     });
 
-    return () => unsubscribe();  // Cleanup function to avoid memory leaks
+    return () => unsubscribe();
   }, []);
 
   const logout = async () => {
@@ -27,8 +29,8 @@ export const AuthProvider = ({ children }) => {  // Fixed prop name
   };
 
   return (
-    <AuthContext.Provider value={{ user, isAdmin, logout }}>
-      {children}  {/* Fixed incorrect prop name */}
+    <AuthContext.Provider value={{ user, isAdmin, logout, loading }}>
+      {!loading && children} {/* Prevent rendering until auth state is resolved */}
     </AuthContext.Provider>
   );
 };
