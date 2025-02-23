@@ -9,25 +9,25 @@ const ProductCard = ({ product }) => {
   const { dispatch } = useCart();
   const { user } = useAuth();
   const navigate = useNavigate();
-  const [open, setOpen] = useState(false); // Snackbar state
+  const [open, setOpen] = useState(false);
 
   const handleAddToCart = () => {
     if (!user) {
-      alert("You must be logged in to add items to the cart!"); // Or use a modal
+      alert("You must be logged in to add items to the cart!");
       navigate("/login");
       return;
     }
     dispatch({ type: "ADD_TO_CART", payload: product });
-    setOpen(true); // Show success notification
+    setOpen(true);
   };
 
   return (
-    <div className="border p-4 bg-[#FAFFFD] rounded-lg shadow-md">
-      <h2 className="text-lg font-bold">{product.name}</h2>
-      <p className="text-gray-500">{product.price} Rs</p>
+    <div className="bg-white shadow-lg rounded-md p-5 border border-[#B3BFB8] w-full max-w-md mt-6 mx-auto">
+      <h2 className="text-xl font-bold text-[#042A2B]">{product.name}</h2>
+      <p className="text-gray-600 font-semibold">{product.price} Rs</p>
       <button
         onClick={handleAddToCart}
-        className="bg-[#FA824C] text-white p-2 rounded mt-2"
+        className="w-full p-3 bg-[#F06543] text-white font-semibold rounded-md mt-3 hover:bg-[#d95336] transition"
       >
         Add to Cart
       </button>
@@ -35,7 +35,7 @@ const ProductCard = ({ product }) => {
       {/* Snackbar for success message */}
       <Snackbar
         open={open}
-        autoHideDuration={2000} // Auto close after 2 seconds
+        autoHideDuration={2000}
         onClose={() => setOpen(false)}
         anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
       >

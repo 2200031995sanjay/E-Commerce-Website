@@ -1,25 +1,34 @@
+import { useState } from "react";
 import { useCart } from "../context/CartContext";
+import { Snackbar, Alert } from "@mui/material";
 
 const Cart = () => {
   const { cart, dispatch } = useCart();
+  const [open, setOpen] = useState(false);
+
+  const handleRemove = (item) => {
+    dispatch({ type: "REMOVE_FROM_CART", payload: item.id });
+    setOpen(true);
+  };
 
   return (
-    <div className="p-4 max-w-lg mx-auto">
-      <h1 className="text-2xl font-bold mb-4">Shopping Cart</h1>
+    <div className="p-6 max-w-xl mx-auto mt-24  min-h-screen rounded-lg">
+      <h1 className="text-2xl font-bold text-center mb-6 text-[#F06543]">Shopping Cart</h1>
+
       {cart.length > 0 ? (
         <div className="space-y-4">
           {cart.map((item) => (
             <div
               key={item.id}
-              className="grid grid-cols-3 items-center border-b py-2 px-4 bg-white rounded-lg shadow-md"
+              className="flex items-center justify-between p-4 bg-white rounded-md shadow-md border border-[#B3BFB8]"
             >
-              <div className="col-span-2">
-                <h2 className="text-lg font-semibold">{item.name}</h2>
-                <p className="text-gray-600">${item.price}</p>
+              <div>
+                <h2 className="text-lg font-bold text-[#042A2B]">{item.name}</h2>
+                <p className="text-gray-600 font-semibold">{item.price} Rs</p>
               </div>
               <button
-                onClick={() => dispatch({ type: "REMOVE_FROM_CART", payload: item.id })}
-                className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 transition"
+                onClick={() => handleRemove(item)}
+                className="px-4 py-2 bg-red-500 text-white font-semibold rounded-md hover:bg-red-600 transition"
               >
                 Remove
               </button>
@@ -27,8 +36,20 @@ const Cart = () => {
           ))}
         </div>
       ) : (
-        <p className="text-center text-gray-500">Your cart is empty.</p>
+        <p className="text-center text-gray-600">Your cart is empty.</p>
       )}
+
+      {/* Snackbar Notification */}
+      <Snackbar
+        open={open}
+        autoHideDuration={2000}
+        onClose={() => setOpen(false)}
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+      >
+        <Alert onClose={() => setOpen(false)} severity="warning" variant="filled">
+          Item removed from cart!
+        </Alert>
+      </Snackbar>
     </div>
   );
 };

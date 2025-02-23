@@ -9,20 +9,20 @@ import Signup from "./pages/Signup";
 import AdminDashboard from "./pages/AdminDashboard";
 
 function App() {
-  const { user, isAdmin } = useAuth() || {}; // Avoid destructuring undefined
+  const { user, isAdmin } = useAuth() || {}; // Prevent undefined issues
 
   return (
     <div className="bg-[#F0F7F4] text-[#042A2B] min-h-screen">
       <Router>
         <CartProvider>
           <Navbar />
-          <div > {/* Reduced padding */}
+          <div className="p-4"> {/* Added padding for better spacing */}
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/cart" element={user ? <Cart /> : <Navigate to="/login" />} />
-              <Route path="/login" element={<Login />} />
-              <Route path="/signup" element={<Signup />} />
-              <Route path="/admin" element={isAdmin ? <AdminDashboard /> : <Navigate to="/" />} />
+              <Route path="/login" element={!user ? <Login /> : <Navigate to="/" />} />
+              <Route path="/signup" element={!user ? <Signup /> : <Navigate to="/" />} />
+              <Route path="/admin" element={user && isAdmin ? <AdminDashboard /> : <Navigate to="/" />} />
             </Routes>
           </div>
         </CartProvider>

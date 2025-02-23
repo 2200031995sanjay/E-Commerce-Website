@@ -1,60 +1,72 @@
-
-import { useState } from 'react';
+import { useState } from "react";
+import { useProducts } from "../context/ProductContext"; // Import Product Context
 
 export default function AdminDashboard() {
-  const [products, setProducts] = useState([
-    { id: 1, name: "Laptop", price: 999 },
-    { id: 2, name: "Phone", price: 699 },
-  ])
+  const { products, addProduct } = useProducts(); // Get products & addProduct function
   const [name, setName] = useState("");
   const [price, setPrice] = useState("");
 
-  const addProduct = ()=>{
-    if(name && price){
-      setProducts([...products,{id:Date.now(),name, price:parseFloat(price)}]);
+  const handleAddProduct = () => {
+    if (name && price) {
+      addProduct(name, price); // Add product globally
       setName("");
       setPrice("");
     }
   };
 
-  const removeProduct=(id)=>{
-    setProducts(products.filter((product)=> product.id !== id));
-  }
-
   return (
-    <div className="p-4">
-      <h1 className="text-2xl font-bold">Admin Dashboard</h1>
-      <div className="mt-4">
-        <input
-          type="text"
-          placeholder="Product Name"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          className="p-2 border mr-2"
-        />
-        <input
-          type="number"
-          placeholder="Price"
-          value={price}
-          onChange={(e) => setPrice(e.target.value)}
-          className="p-2 border mr-2"
-        />
-        <button onClick={addProduct} className="p-2 bg-green-500 text-white rounded">Add Product</button>
-      </div>
-      <div className="mt-4">
-        <h2 className="text-xl font-bold">Product List</h2>
-        {products.length > 0 ? (
-          products.map((product) => (
-            <div key={product.id} className="flex justify-between p-2 border-b">
-              {product.name} - ${product.price}
-              <button onClick={() => removeProduct(product.id)} className="text-red-500">Remove</button>
+    <div className="h-screen w-full flex items-center justify-center overflow-hidden">
+      <div className="w-full max-w-sm p-6 bg-white rounded-lg shadow-lg">
+        <h1 className="text-xl font-bold text-[#6B0F1A] mb-4 text-center">Admin Dashboard</h1>
+
+        <div className="flex flex-col">
+          <input
+            type="text"
+            placeholder="Product Name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            className="w-full p-2 border border-[#595959] rounded mb-2 outline-none text-[#6B0F1A]"
+            required
+          />
+
+          <input
+            type="number"
+            placeholder="Price"
+            value={price}
+            onChange={(e) => setPrice(e.target.value)}
+            className="w-full p-2 border border-[#595959] rounded mb-4 outline-none text-[#6B0F1A]"
+            required
+          />
+
+          <button
+            onClick={handleAddProduct}
+            className="w-full p-2 bg-[#6B0F1A] text-white rounded hover:bg-[#500b13] transition"
+          >
+            Add Product
+          </button>
+        </div>
+
+        <div className="mt-4">
+          <h2 className="text-xl font-bold text-[#6B0F1A] text-center">Product List</h2>
+          {products.length > 0 ? (
+            <div className="mt-2 space-y-2">
+              {products.map((product) => (
+                <div
+                  key={product.id}
+                  className="flex justify-between items-center p-2 border-b bg-gray-100 rounded"
+                >
+                  <div>
+                    <h3 className="text-lg font-medium text-[#6B0F1A]">{product.name}</h3>
+                    <p className="text-gray-600">${product.price}</p>
+                  </div>
+                </div>
+              ))}
             </div>
-          ))
-        ) : (
-          <p>No products available.</p>
-        )}
+          ) : (
+            <p className="text-center text-gray-500 mt-2">No products available.</p>
+          )}
+        </div>
       </div>
     </div>
-  )
+  );
 }
-
